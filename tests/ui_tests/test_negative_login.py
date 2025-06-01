@@ -1,17 +1,11 @@
 import pytest
 from pages.login_page import LoginPage
-
 @pytest.mark.neg
-def test_negative_login_with_invalid_credentials(page):
-    # Open the login page
-    login_page = LoginPage(page)
-    login_page.navigate()
-
-    # Try to logout first, just in case
-    login_page.logout()
-
-    # Try to login with valid credentials
-    login_page.login('wrong_user', 'wrong_password')
-
-    # Verify that an error message appears
-    login_page.assert_login_error()
+@pytest.mark.parametrize("username, password, expected_error", [
+    ("wrong_user", "wrong_pass", "Epic sadface"),
+    ("", "secret_sauce", "Username is required"),
+    ("standard_user", "", "Password is required"),
+])
+def test_negative_login(login, username, password, expected_error):
+    login_page = login(username, password)
+    login_page.assert_login_error(expected_error)

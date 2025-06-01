@@ -5,18 +5,16 @@ from pages.checkout_page import CheckoutPage
 
 @pytest.mark.ui
 def test_successful_shopping_flow(page, login):
+    login("standard_user", "secret_sauce")
+
     products_page = ProductsPage(page)
     cart_page = CartPage(page)
     checkout_page = CheckoutPage(page)
 
-    # Verify Products Page
+    #Product Page
     products_page.verify_products_header_visible()
-
-    # Sort Products
     products_page.sort_by_price_low_to_high()
     products_page.verify_sorting_low_to_high()
-
-    # Add Cheapest and Most Expensive
     products_page.add_cheapest_and_most_expensive_products()
 
     # Cart Page
@@ -31,6 +29,5 @@ def test_successful_shopping_flow(page, login):
     # Verify Checkout Completion
     checkout_page.verify_order_completion()
 
-    # Logout at the end (via login_page returned by login fixture)
-    login.logout()
+
 

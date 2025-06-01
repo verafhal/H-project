@@ -20,6 +20,7 @@ class LoginPage:
         self.password_input.fill(password)
         self.login_button.click()
 
+
     def logout(self):
         if self.burger_menu_button.is_visible(timeout=2000):  # Try to detect if logged in
             self.burger_menu_button.click()
@@ -28,9 +29,17 @@ class LoginPage:
             self.page.wait_for_selector('#login-button', timeout=3000)
 
 
-    def assert_login_error(self):
-        assert self.error_message.is_visible(), "Expected error message to be visible for invalid login"
-        error_text = self.error_message.inner_text()
-        assert "Epic sadface" in error_text, f"Unexpected error text: {error_text}"
+    def assert_login_error(self, expected_text: str = "Epic sadface"):
+        """Assert that login error message is visible and contains expected text."""
+        assert self.error_message.is_visible(), "Expected error message to be visible"
+        actual_text = self.error_message.text_content()
+        assert expected_text in actual_text, f"Unexpected error text. Got: '{actual_text}'"
+
+
+    def get_title(self) -> str:
+        """Get the page title (used after login to verify success)."""
+        return  self.page.locator(".title").text_content()
+
+
 
 
